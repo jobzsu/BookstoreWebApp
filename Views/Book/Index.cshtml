@@ -1,0 +1,50 @@
+﻿@using BookstoreWebApp.Common.Models;
+@model List<BookModel>
+@{
+    ViewData["Title"] = "Books";
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Book Title</th>
+            <th scope="col">Reserved</th>
+            <th scope="col">Booking #</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+        {
+            <tr>
+                <th scope="row">@book.Title</th>
+                <td>@book.IsReserved</td>
+                <td>@book.BookingNumber</td>
+                <td><a style="text-decoration: none;" href="javascript:void(0)" onclick="reserveBook('@book.Id')">Reserve</a> | 
+                    <a style="text-decoration: none;" href="javascript:void(0)" onclick="returnBook('@book.Id')">Return</a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    var reserveBook = (bId) => {
+        $.ajax({
+            url: '/Book/Reserve',
+            data: { bookId: bId },
+            method: 'POST',
+            success: function (data) {
+                if(data.isSuccess) {
+                    location.reload(true);
+                } else {
+                    alert(data.message);
+                }
+            },
+            error: function (xhr, ajaxOptions, thrownError) {
+                alert(xhr.responseText);
+            }
+        });
+    }
+    var returnBook = (bookId) => {
+        alert(bookId);
+    }
+</script>
